@@ -53,9 +53,31 @@
         </div>
     </div>
     
+    <!-- Script load order is important: config -> auth -> api -->
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
-    <script src="js/login.js"></script>
+
+    <!-- Ensure Auth dependency is available before loading login logic -->
+    <script>
+        (function () {
+            if (
+                !window.Auth ||
+                typeof Auth.isAuthenticated !== 'function' ||
+                typeof Auth.getAuthHeader !== 'function'
+            ) {
+                console.error(
+                    'Auth module is not initialized. ' +
+                    'Ensure js/auth.js is loaded before js/api.js and login functionality.'
+                );
+                return;
+            }
+
+            var script = document.createElement('script');
+            script.src = 'js/login.js';
+            script.async = false;
+            document.body.appendChild(script);
+        })();
+    </script>
 </body>
 </html>

@@ -60,21 +60,51 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = document.createElement('div');
         card.className = 'account-card';
         card.setAttribute('data-type', account.accountType);
-        
-        card.innerHTML = `
-            <div class="account-header">
-                <div class="account-icon">${icon}</div>
-                <div class="account-type">
-                    <div class="account-type-label">Account</div>
-                    <div class="account-type-name">${accountTypeName}</div>
-                </div>
-            </div>
-            <div class="account-details">
-                <div class="account-id">
-                    <strong>Account ID:</strong> ${account.id}
-                </div>
-            </div>
-        `;
+
+        // Build account header
+        const header = document.createElement('div');
+        header.className = 'account-header';
+
+        const iconContainer = document.createElement('div');
+        iconContainer.className = 'account-icon';
+        iconContainer.textContent = icon;
+
+        const typeContainer = document.createElement('div');
+        typeContainer.className = 'account-type';
+
+        const typeLabel = document.createElement('div');
+        typeLabel.className = 'account-type-label';
+        typeLabel.textContent = 'Account';
+
+        const typeName = document.createElement('div');
+        typeName.className = 'account-type-name';
+        typeName.textContent = accountTypeName;
+
+        typeContainer.appendChild(typeLabel);
+        typeContainer.appendChild(typeName);
+
+        header.appendChild(iconContainer);
+        header.appendChild(typeContainer);
+
+        // Build account details
+        const details = document.createElement('div');
+        details.className = 'account-details';
+
+        const accountIdContainer = document.createElement('div');
+        accountIdContainer.className = 'account-id';
+
+        const accountIdLabel = document.createElement('strong');
+        accountIdLabel.textContent = 'Account ID:';
+
+        // Add a space between label and ID value
+        accountIdContainer.appendChild(accountIdLabel);
+        accountIdContainer.appendChild(document.createTextNode(' ' + account.id));
+
+        details.appendChild(accountIdContainer);
+
+        // Assemble card
+        card.appendChild(header);
+        card.appendChild(details);
         
         return card;
     }

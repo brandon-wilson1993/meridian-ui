@@ -11,12 +11,12 @@ const Auth = {
      * @param {Object} userData - User data from API
      */
     login(username, password, userData) {
+        // Store only non-sensitive identifier; do not persist plaintext passwords
         const credentials = {
-            username: username,
-            password: password
+            username: username
         };
         
-        // Store credentials for API authentication
+        // Store credentials for API authentication (username only)
         sessionStorage.setItem(config.credentialsKey, JSON.stringify(credentials));
         
         // Generate mock JWT token (for UI purposes)

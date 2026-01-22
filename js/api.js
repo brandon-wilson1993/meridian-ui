@@ -35,8 +35,8 @@ const API = {
             
             // Handle HTTP errors
             if (!response.ok) {
-                if (response.status === 401) {
-                    // Unauthorized - redirect to login
+                if (response.status === 401 && Auth.isAuthenticated()) {
+                    // Unauthorized for an authenticated user - session likely expired
                     Auth.logout();
                     throw new Error('Session expired. Please login again.');
                 }
@@ -102,13 +102,18 @@ const API = {
          * Find user by username
          * @param {string} username - Username to search for
          * @returns {Promise<Object|null>} User object or null if not found
-         * Note: This fetches all users and filters client-side. For production use,
-         * consider adding a backend endpoint like GET /users?username={username}
-         * for better performance with large user bases.
+         * This method queries the backend for the specific username instead of
+         * fetching all users and filtering client-side.
          */
         async findByUsername(username) {
-            const users = await this.getAll();
-            return users.find(user => user.username === username) || null;
+            const response = await API.request(`/users?username=${encodeURIComponent(username)}`);
+            
+            // Support both array and single-object responses from the backend
+            if (Array.isArray(response)) {
+                return response[0] || null;
+            }
+            
+            return response || null;
         }
     },
     

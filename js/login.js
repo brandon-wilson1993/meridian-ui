@@ -67,8 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
         
-        if (password.length < 8) {
-            showError('Password must be at least 8 characters');
+        const passwordPolicyRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
+        if (!passwordPolicyRegex.test(password)) {
+            showError('Password must be at least 8 characters and include at least one lowercase letter, one uppercase letter, and one special character');
             return false;
         }
         
@@ -93,25 +94,36 @@ document.addEventListener('DOMContentLoaded', () => {
         showLoading();
         
         try {
-            // Authenticate by making an API request with Basic Auth credentials
-            // Since the backend doesn't have a dedicated login endpoint, we verify
-            // the credentials by attempting to fetch user data with Basic Auth.
-            // The backend will return 401 if credentials are invalid.
-            const user = await API.users.findByUsername(username);
-            
-            if (!user) {
+            // Authenticate by calling the backend login endpoint, which validates
+            // the credentials and returns a JWT token and user data.
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (!response.ok) {
+                // For security, do not reveal whether username or password was incorrect
                 showError('Invalid username or password');
                 hideLoading();
                 return;
             }
-            
-            // Store authentication data
-            // Password is stored securely in session storage and sent with each API request
-            Auth.login(username, password, user);
-            
+
+            const { token, user } = await response.json();
+
+            if (!token || !user) {
+                showError('Login failed. Please try again.');
+                hideLoading();
+                return;
+            }
+
+            // Store authentication data (JWT token and user info)
+            Auth.login(token, user);
+
             // Redirect to dashboard
             window.location.href = 'dashboard.html';
-            
         } catch (error) {
             console.error('Login error:', error);
             showError(error.message || 'Login failed. Please try again.');
