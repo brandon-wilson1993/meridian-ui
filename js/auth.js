@@ -100,7 +100,12 @@ const Auth = {
      * Set session timeout handler
      */
     setSessionTimeout() {
-        setTimeout(() => {
+        // Clear any existing timeout to prevent memory leaks
+        if (this._timeoutId) {
+            clearTimeout(this._timeoutId);
+        }
+        
+        this._timeoutId = setTimeout(() => {
             alert('Your session has expired. Please login again.');
             this.logout();
         }, config.sessionTimeout);

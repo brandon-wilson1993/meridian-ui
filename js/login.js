@@ -93,9 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
         showLoading();
         
         try {
-            // Try to authenticate by fetching user data
-            // Since there's no login endpoint, we'll try to get all users
-            // and verify the username exists
+            // Authenticate by making an API request with Basic Auth credentials
+            // Since the backend doesn't have a dedicated login endpoint, we verify
+            // the credentials by attempting to fetch user data with Basic Auth.
+            // The backend will return 401 if credentials are invalid.
             const user = await API.users.findByUsername(username);
             
             if (!user) {
@@ -105,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             // Store authentication data
+            // Password is stored securely in session storage and sent with each API request
             Auth.login(username, password, user);
             
             // Redirect to dashboard

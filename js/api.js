@@ -102,6 +102,9 @@ const API = {
          * Find user by username
          * @param {string} username - Username to search for
          * @returns {Promise<Object|null>} User object or null if not found
+         * Note: This fetches all users and filters client-side. For production use,
+         * consider adding a backend endpoint like GET /users?username={username}
+         * for better performance with large user bases.
          */
         async findByUsername(username) {
             const users = await this.getAll();
