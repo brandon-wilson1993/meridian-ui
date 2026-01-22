@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meridian Bank - Login</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="login-card">
+            <div class="logo">
+                <h1>Meridian Bank</h1>
+                <p class="tagline">Secure Banking Portal</p>
+            </div>
+            
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        required 
+                        autocomplete="username"
+                        placeholder="Enter your username"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required 
+                        autocomplete="current-password"
+                        placeholder="Enter your password"
+                    >
+                </div>
+                
+                <div id="errorMessage" class="error-message hidden"></div>
+                
+                <button type="submit" class="btn btn-primary" id="loginButton">
+                    <span class="btn-text">Login</span>
+                    <span class="loading-spinner hidden"></span>
+                </button>
+            </form>
+            
+            <div class="info-text">
+                <p>For demo purposes, the system will authenticate against the Meridian API</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Script load order is important: config -> auth -> api -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+
+    <!-- Ensure Auth dependency is available before loading login logic -->
+    <script>
+        (function () {
+            if (
+                !window.Auth ||
+                typeof Auth.isAuthenticated !== 'function' ||
+                typeof Auth.getAuthHeader !== 'function'
+            ) {
+                console.error(
+                    'Auth module is not initialized. ' +
+                    'Ensure js/auth.js is loaded before js/api.js and login functionality.'
+                );
+                return;
+            }
+
+            var script = document.createElement('script');
+            script.src = 'js/login.js';
+            script.async = false;
+            document.body.appendChild(script);
+        })();
+    </script>
+</body>
+</html>
