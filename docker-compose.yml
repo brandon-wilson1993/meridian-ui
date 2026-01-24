@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: meridian-postgres
+    environment:
+      POSTGRES_DB: meridian
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d meridian"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  flyway:
+    image: brawilson1993/meridian-flyway:latest
+    container_name: meridian-flyway
+    environment:
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/meridian
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: password
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  meridian:
+    image: brawilson1993/meridian:latest
+    container_name: meridian-api
+    environment:
+      PG_HOST: postgres
+      JWT_SECRET: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+    ports:
+      - "8080:8080"
+    depends_on:
+      flyway:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
