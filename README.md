@@ -151,6 +151,47 @@ docker compose down -v
 
 The UI is preconfigured to connect to the Meridian API at `http://localhost:8080`, which matches the port exposed by the Docker Compose setup. No additional configuration is needed when using Docker Compose with the default settings.
 
+### Running the Complete Stack (Backend + UI)
+
+To run the full Meridian application with Docker Compose backend and the UI:
+
+1. **Start the backend services:**
+   ```bash
+   docker compose up -d
+   ```
+
+2. **Wait for services to be ready:**
+   ```bash
+   # Check that meridian service is running
+   docker compose ps
+   
+   # Verify API is responding (optional)
+   curl http://localhost:8080
+   ```
+
+3. **Start the UI in a separate terminal:**
+   ```bash
+   # Using Python 3
+   python3 -m http.server 8000
+   
+   # OR using Node.js
+   npx http-server -p 8000
+   ```
+
+4. **Access the application:**
+   - Open your browser to `http://localhost:8000`
+   - The UI will automatically connect to the Meridian API at `http://localhost:8080`
+   - Login with your credentials
+   - The UI communicates with the backend services running in Docker
+
+5. **When finished, stop all services:**
+   ```bash
+   # Stop the UI (Ctrl+C in the terminal running the HTTP server)
+   
+   # Stop Docker Compose services
+   docker compose down
+   ```
+
 ### Using the Application
 
 1. **Login**
