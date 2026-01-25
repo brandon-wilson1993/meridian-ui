@@ -5,23 +5,13 @@
 
 const Auth = {
     /**
-     * Store authentication credentials and generate mock JWT token
-     * @param {string} username - User's username
-     * @param {string} password - User's password
-     * @param {Object} userData - User data from API
+     * Store authentication token and user data
+     * @param {string} token - JWT token from backend
+     * @param {Object} userData - User data
      */
-    login(username, password, userData) {
-        // Store only non-sensitive identifier; do not persist plaintext passwords
-        const credentials = {
-            username: username
-        };
-        
-        // Store credentials for API authentication (username only)
-        sessionStorage.setItem(config.credentialsKey, JSON.stringify(credentials));
-        
-        // Generate mock JWT token (for UI purposes)
-        const mockToken = this.generateMockJWT(username);
-        sessionStorage.setItem(config.tokenKey, mockToken);
+    login(token, userData) {
+        // Store JWT token
+        sessionStorage.setItem(config.tokenKey, token);
         
         // Store user data
         if (userData) {
@@ -80,8 +70,7 @@ const Auth = {
      */
     isAuthenticated() {
         const token = this.getToken();
-        const credentials = this.getCredentials();
-        return !!(token && credentials);
+        return !!token;
     },
     
     /**
@@ -90,7 +79,6 @@ const Auth = {
     logout() {
         sessionStorage.removeItem(config.tokenKey);
         sessionStorage.removeItem(config.userKey);
-        sessionStorage.removeItem(config.credentialsKey);
         
         // Redirect to login page
         window.location.href = 'index.html';
@@ -125,14 +113,6 @@ const Auth = {
      * @returns {string} Authorization header value
      */
     getAuthHeader() {
-        const credentials = this.getCredentials();
-        if (credentials) {
-            // Use Basic Auth with stored credentials
-            const encoded = btoa(`${credentials.username}:${credentials.password}`);
-            return `Basic ${encoded}`;
-        }
-        
-        // Fallback to Bearer token if available
         const token = this.getToken();
         return token ? `Bearer ${token}` : '';
     }
