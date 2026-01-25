@@ -3,6 +3,10 @@
  * Handles all API requests to the meridian backend
  */
 
+console.log('api.js loading...');
+console.log('config available:', typeof config !== 'undefined');
+console.log('Auth available:', typeof Auth !== 'undefined');
+
 const API = {
     /**
      * Make a fetch request with proper headers and error handling
@@ -12,6 +16,7 @@ const API = {
      */
     async request(endpoint, options = {}) {
         const url = `${config.apiBaseUrl}${endpoint}`;
+        console.log('API request to:', url);
         
         const defaultHeaders = {
             'Content-Type': 'application/json'
@@ -149,3 +154,5 @@ const API = {
 if (typeof window !== 'undefined') {
     window.API = API;
 }
+
+console.log('api.js loaded successfully');

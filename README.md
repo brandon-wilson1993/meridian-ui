@@ -33,6 +33,7 @@ meridian-ui/
 
 - A web browser (Chrome, Firefox, Safari, or Edge)
 - Access to the Meridian backend API (running locally or remotely)
+- Docker and Docker Compose (if running backend services via Docker)
 
 ### Configuration
 
@@ -88,6 +89,108 @@ Then open your browser to `http://localhost:8000`
 #### Option 2: Direct File Access
 
 You can also open `index.html` directly in your browser, but this may cause CORS issues when connecting to the API. Using a local HTTP server is recommended.
+
+### Running Backend Services with Docker Compose
+
+The easiest way to run the complete Meridian stack (database, migrations, and API) is using Docker Compose.
+
+#### Prerequisites
+
+- Docker and Docker Compose installed on your system
+
+#### Starting the Backend Services
+
+From the repository root, run:
+
+```bash
+docker compose up -d
+```
+
+This will start three services:
+
+1. **postgres** - PostgreSQL 16 database on port 5432
+2. **flyway** - Database migration tool (runs once and exits)
+3. **meridian** - Meridian API service on port 8080
+
+The services start in order with proper health checks:
+- Postgres starts first and waits until healthy
+- Flyway runs migrations after Postgres is ready
+- Meridian API starts after migrations complete successfully
+
+#### Checking Service Status
+
+```bash
+docker compose ps
+```
+
+#### Viewing Logs
+
+```bash
+# All services
+docker compose logs
+
+# Specific service
+docker compose logs meridian
+docker compose logs postgres
+docker compose logs flyway
+```
+
+#### Stopping the Services
+
+```bash
+docker compose down
+```
+
+To also remove the database volume (delete all data):
+
+```bash
+docker compose down -v
+```
+
+#### Default Configuration
+
+The UI is preconfigured to connect to the Meridian API at `http://localhost:8080`, which matches the port exposed by the Docker Compose setup. No additional configuration is needed when using Docker Compose with the default settings.
+
+### Running the Complete Stack (Backend + UI)
+
+To run the full Meridian application with Docker Compose backend and the UI:
+
+1. **Start the backend services:**
+   ```bash
+   docker compose up -d
+   ```
+
+2. **Wait for services to be ready:**
+   ```bash
+   # Check that meridian service is running
+   docker compose ps
+   
+   # Verify API is responding (optional)
+   curl http://localhost:8080
+   ```
+
+3. **Start the UI in a separate terminal:**
+   ```bash
+   # Using Python 3
+   python3 -m http.server 8000
+   
+   # OR using Node.js
+   npx http-server -p 8000
+   ```
+
+4. **Access the application:**
+   - Open your browser to `http://localhost:8000`
+   - The UI will automatically connect to the Meridian API at `http://localhost:8080`
+   - Login with your credentials
+   - The UI communicates with the backend services running in Docker
+
+5. **When finished, stop all services:**
+   ```bash
+   # Stop the UI (Ctrl+C in the terminal running the HTTP server)
+   
+   # Stop Docker Compose services
+   docker compose down
+   ```
 
 ### Using the Application
 
