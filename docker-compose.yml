@@ -3,7 +3,7 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: meridian-postgres
+    container_name: postgres
     environment:
       POSTGRES_DB: meridian
       POSTGRES_USER: postgres
@@ -20,7 +20,7 @@ services:
 
   flyway:
     image: brawilson1993/meridian-flyway:latest
-    container_name: meridian-flyway
+    container_name: flyway
     environment:
       FLYWAY_URL: jdbc:postgresql://postgres:5432/meridian
       FLYWAY_USER: postgres
@@ -45,3 +45,4 @@ services:
 
 volumes:
   postgres_data:
+    driver: local
