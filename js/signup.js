@@ -2,6 +2,17 @@
  * Sign up page logic for Meridian Bank UI
  */
 
+// Password validation constants
+const PASSWORD_REQUIREMENTS = {
+    // Password must contain:
+    // - At least 8 characters
+    // - At least one lowercase letter (a-z)
+    // - At least one uppercase letter (A-Z)
+    // - At least one special character (!@#$%^&*()_+-=[]{};':"\\|,.<>/?)
+    REGEX: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/,
+    ERROR_MESSAGE: 'Password must be at least 8 characters and contain at least one lowercase letter, one uppercase letter, and one special character'
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // Check if already authenticated
     if (Auth.isAuthenticated()) {
@@ -82,9 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // Password validation (at least 8 characters, one uppercase, one lowercase, one special character)
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
-        if (!passwordRegex.test(password)) {
-            showError('Password must be at least 8 characters and contain at least one lowercase letter, one uppercase letter, and one special character');
+        if (!PASSWORD_REQUIREMENTS.REGEX.test(password)) {
+            showError(PASSWORD_REQUIREMENTS.ERROR_MESSAGE);
             return false;
         }
         
@@ -112,7 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         try {
             // Call POST /users endpoint
-            // Note: The API requires authentication, so we use Auth.getAuthHeader()
+            // Note: The Meridian API requires authentication even for user registration.
+            // This is an unusual but intentional API design requirement.
             const response = await fetch(`${config.apiBaseUrl}/users`, {
                 method: 'POST',
                 headers: Auth.getAuthHeader(),
