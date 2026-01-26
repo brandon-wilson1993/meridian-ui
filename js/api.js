@@ -128,9 +128,26 @@ const API = {
          * @returns {Promise<Array>} Array of account objects
          */
         async getByUserId(userId) {
-            return API.request(`/users/${userId}/accounts`);
+            const authHeader = Auth.getAuthHeader();
+            if (!authHeader || !authHeader.Authorization) {
+                throw new Error('Not authenticated. Please login again.');
+            }
+
+            const response = await fetch(`${config.apiBaseUrl}/users/${userId}/accounts`, {
+                method: 'GET',
+                headers: authHeader
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error('Session expired. Please login again.');
+                }
+                throw new Error('Failed to fetch accounts');
+            }
+
+            return response.json();
         },
-        
+
         /**
          * Create account for a user
          * @param {number} userId - User ID

@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             hideError();
             loadingIndicator.classList.remove('hidden');
             
-            // Fetch current user profile from API (includes accounts)
+            // Fetch current user profile from API
             const userData = await API.users.getMe();
             
             if (!userData || !userData.id) {
@@ -149,11 +149,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // Display user info
             displayUserInfo(userData);
             
+            // Fetch user's accounts separately
+            const accounts = await API.accounts.getByUserId(userData.id);
+            
             // Hide loading indicator
             loadingIndicator.classList.add('hidden');
             
-            // Display accounts from user data
-            displayAccounts(userData.accounts || []);
+            // Display accounts
+            displayAccounts(accounts || []);
             
         } catch (error) {
             console.error('Dashboard error:', error);
