@@ -13,19 +13,13 @@ const API = {
     async request(endpoint, options = {}) {
         const url = `${config.apiBaseUrl}${endpoint}`;
         
-        const defaultHeaders = {
-            'Content-Type': 'application/json'
-        };
-        
-        // Add authorization header if authenticated
-        if (Auth.isAuthenticated()) {
-            defaultHeaders['Authorization'] = Auth.getAuthHeader();
-        }
+        // Get auth headers (includes Authorization and Content-Type)
+        const authHeaders = Auth.getAuthHeader();
         
         const fetchOptions = {
             ...options,
             headers: {
-                ...defaultHeaders,
+                ...authHeaders,
                 ...options.headers
             }
         };
@@ -114,6 +108,13 @@ const API = {
             }
             
             return response || null;
+        },
+
+        /**
+         * Get current authenticated user's profile
+         */
+        async getMe() {
+            return API.request('/users/me');
         }
     },
     
@@ -129,7 +130,7 @@ const API = {
         async getByUserId(userId) {
             return API.request(`/users/${userId}/accounts`);
         },
-        
+
         /**
          * Create account for a user
          * @param {number} userId - User ID
