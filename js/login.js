@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'dashboard.html';
         } catch (error) {
             console.error('Login failed');
-            showError(error.message || 'Login failed. Please try again.');
+            showError('Login failed. Please try again.');
             hideLoading();
         }
     });
