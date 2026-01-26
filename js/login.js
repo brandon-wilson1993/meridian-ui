@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const passwordPolicyRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
         if (!passwordPolicyRegex.test(password)) {
-            showError('Password must be at least 8 characters and include at least one lowercase letter, one uppercase letter, and one special character');
+            showError('Username or password is incorrect');
             return false;
         }
         
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 // For security, do not reveal whether username or password was incorrect
-                showError('Invalid username or password');
+                showError('Username or password is incorrect');
                 hideLoading();
                 return;
             }
