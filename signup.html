@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meridian Bank - Login</title>
+    <title>Meridian Bank - Sign Up</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -11,10 +11,32 @@
         <div class="login-card">
             <div class="logo">
                 <h1>Meridian Bank</h1>
-                <p class="tagline">Secure Banking Portal</p>
+                <p class="tagline">Create Your Account</p>
             </div>
             
-            <form id="loginForm" class="login-form" novalidate>
+            <form id="signupForm" class="login-form" novalidate>
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input 
+                        type="text" 
+                        id="firstName" 
+                        name="firstName" 
+                        required 
+                        placeholder="Enter your first name"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input 
+                        type="text" 
+                        id="lastName" 
+                        name="lastName" 
+                        required 
+                        placeholder="Enter your last name"
+                    >
+                </div>
+                
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input 
@@ -23,7 +45,7 @@
                         name="username" 
                         required 
                         autocomplete="username"
-                        placeholder="Enter your username"
+                        placeholder="Choose a username"
                     >
                 </div>
                 
@@ -34,25 +56,22 @@
                         id="password" 
                         name="password" 
                         required 
-                        autocomplete="current-password"
-                        placeholder="Enter your password"
+                        autocomplete="new-password"
+                        placeholder="Create a password"
                     >
+                    <small class="password-hint">At least 8 characters with one uppercase, one lowercase, and one special character</small>
                 </div>
                 
                 <div id="errorMessage" class="error-message hidden"></div>
                 
-                <button type="submit" class="btn btn-primary" id="loginButton">
-                    <span class="btn-text">Login</span>
+                <button type="submit" class="btn btn-primary" id="signupButton">
+                    <span class="btn-text">Create User</span>
                     <span class="loading-spinner hidden"></span>
                 </button>
             </form>
             
             <div class="info-text">
-                <p>Don't have an account? <a href="signup.html" class="link">Sign up</a></p>
-            </div>
-            
-            <div class="info-text">
-                <p>For demo purposes, the system will authenticate against the Meridian API</p>
+                <p>Already have an account? <a href="index.html" class="link">Login</a></p>
             </div>
         </div>
     </div>
@@ -61,28 +80,6 @@
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
-
-    <!-- Ensure Auth dependency is available before loading login logic -->
-    <script src="js/login.js"></script>
-    <!-- <script>
-        (function () {
-            if (
-                !window.Auth ||
-                typeof Auth.isAuthenticated !== 'function' ||
-                typeof Auth.getAuthHeader !== 'function'
-            ) {
-                console.error(
-                    'Auth module is not initialized. ' +
-                    'Ensure js/auth.js is loaded before js/api.js and login functionality.'
-                );
-                return;
-            }
-
-            var script = document.createElement('script');
-            script.src = 'js/login.js';
-            script.async = false;
-            document.body.appendChild(script);
-        })();
-    </script> -->
+    <script src="js/signup.js"></script>
 </body>
 </html>
