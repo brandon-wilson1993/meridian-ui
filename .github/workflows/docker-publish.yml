@@ -5,6 +5,9 @@
 # Requirements:
 # - Add repository secrets: DOCKERHUB_USERNAME and DOCKERHUB_TOKEN (or DOCKERHUB_PASSWORD)
 # - Image name used: brawilson1993/meridian-ui
+
+name: Docker Build and Push
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -44,7 +47,7 @@ jobs:
             brawilson1993/meridian-ui:pr-${{ github.event.pull_request.number }}
 
   build-push-main:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Build & push (main -> latest)
     runs-on: ubuntu-latest
     permissions:
