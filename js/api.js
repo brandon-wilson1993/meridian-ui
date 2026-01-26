@@ -114,19 +114,7 @@ const API = {
          * Get current authenticated user's profile
          */
         async getMe() {
-            const response = await fetch(`${config.apiBaseUrl}/users/me`, {
-                method: 'GET',
-                headers: Auth.getAuthHeader()
-            });
-
-            if (!response.ok) {
-                if (response.status === 401) {
-                    throw new Error('Session expired. Please login again.');
-                }
-                throw new Error('Failed to fetch user profile');
-            }
-
-            return response.json();
+            return API.request('/users/me');
         }
     },
     

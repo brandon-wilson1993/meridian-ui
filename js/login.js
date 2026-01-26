@@ -67,12 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
         
-        const passwordPolicyRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
-        if (!passwordPolicyRegex.test(password)) {
-            showError('Username or password is incorrect');
-            return false;
-        }
-        
         return true;
     }
     
