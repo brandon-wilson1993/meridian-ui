@@ -109,12 +109,20 @@ const Auth = {
     },
     
     /**
-     * Get authorization header value for API calls
-     * @returns {string} Authorization header value
+     * Get authorization header object for API calls
+     * @returns {Object} Headers object with Authorization
      */
     getAuthHeader() {
         const token = this.getToken();
-        return token ? `Bearer ${token}` : '';
+        if (token) {
+            return {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            };
+        }
+        return {
+            'Content-Type': 'application/json'
+        };
     }
 };
 

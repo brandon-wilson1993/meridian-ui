@@ -13,19 +13,13 @@ const API = {
     async request(endpoint, options = {}) {
         const url = `${config.apiBaseUrl}${endpoint}`;
         
-        const defaultHeaders = {
-            'Content-Type': 'application/json'
-        };
-        
-        // Add authorization header if authenticated
-        if (Auth.isAuthenticated()) {
-            defaultHeaders['Authorization'] = Auth.getAuthHeader();
-        }
+        // Get auth headers (includes Authorization and Content-Type)
+        const authHeaders = Auth.getAuthHeader();
         
         const fetchOptions = {
             ...options,
             headers: {
-                ...defaultHeaders,
+                ...authHeaders,
                 ...options.headers
             }
         };
@@ -114,6 +108,25 @@ const API = {
             }
             
             return response || null;
+        },
+
+        /**
+         * Get current authenticated user's profile
+         */
+        async getMe() {
+            const response = await fetch(`${config.apiBaseUrl}/users/me`, {
+                method: 'GET',
+                headers: Auth.getAuthHeader()
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error('Session expired. Please login again.');
+                }
+                throw new Error('Failed to fetch user profile');
+            }
+
+            return response.json();
         }
     },
     

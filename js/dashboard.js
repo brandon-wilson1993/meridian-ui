@@ -139,8 +139,8 @@ document.addEventListener('DOMContentLoaded', () => {
             hideError();
             loadingIndicator.classList.remove('hidden');
             
-            // Get user data from session
-            const userData = Auth.getUserData();
+            // Fetch current user profile from API (includes accounts)
+            const userData = await API.users.getMe();
             
             if (!userData || !userData.id) {
                 throw new Error('User data not found. Please login again.');
@@ -149,14 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Display user info
             displayUserInfo(userData);
             
-            // Fetch user's accounts
-            const accounts = await API.accounts.getByUserId(userData.id);
-            
             // Hide loading indicator
             loadingIndicator.classList.add('hidden');
             
-            // Display accounts
-            displayAccounts(accounts);
+            // Display accounts from user data
+            displayAccounts(userData.accounts || []);
             
         } catch (error) {
             console.error('Dashboard error:', error);
