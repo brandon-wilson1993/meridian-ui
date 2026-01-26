@@ -3,8 +3,6 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('login.js loaded');
-    
     // Check if already authenticated
     if (Auth.isAuthenticated()) {
         window.location.href = 'dashboard.html';
@@ -18,8 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorMessage = document.getElementById('errorMessage');
     const buttonText = loginButton.querySelector('.btn-text');
     const loadingSpinner = loginButton.querySelector('.loading-spinner');
-    
-    console.log('Elements found:', { loginForm, usernameInput, passwordInput, loginButton });
     
     /**
      * Show error message
@@ -84,29 +80,22 @@ document.addEventListener('DOMContentLoaded', () => {
      * Handle login form submission
      */
     loginForm.addEventListener('submit', async (e) => {
-        console.log('Submit event fired');
         e.preventDefault();
-        console.log('preventDefault called');
         hideError();
         
         // Validate form
         if (!validateForm()) {
-            console.log('Validation failed');
             return;
         }
         
         const username = usernameInput.value.trim();
         const password = passwordInput.value;
         
-        console.log('Attempting login for:', username);
-        console.log('API URL:', `${config.apiBaseUrl}/auth`);
-        
         showLoading();
         
         try {
             // Authenticate by calling the backend login endpoint, which validates
             // the credentials and returns a JWT token and user data.
-            console.log('Making fetch request...');
             const response = await fetch(`${config.apiBaseUrl}/auth`, {
                 method: 'POST',
                 headers: {
@@ -114,8 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({ username, password })
             });
-
-            console.log('Response received:', response.status, response.ok);
 
             if (!response.ok) {
                 // For security, do not reveal whether username or password was incorrect
@@ -125,8 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const responseData = await response.json();
-            console.log('Response data:', responseData);
-            console.log('Response keys:', Object.keys(responseData));
 
             // Extract token
             const token = responseData.token || responseData.accessToken || responseData;
@@ -136,12 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const user = {
                 username: username
             };
-            
-            console.log('Extracted token:', token);
-            console.log('Created user:', user);
 
             if (!token) {
-                console.log('Missing token');
                 showError('Login failed. Please try again.');
                 hideLoading();
                 return;
@@ -153,8 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Redirect to dashboard
             window.location.href = 'dashboard.html';
         } catch (error) {
-            console.error('Login error:', error);
-            showError(error.message || 'Login failed. Please try again.');
+            console.error('Login failed');
+            showError('Login failed. Please try again.');
             hideLoading();
         }
     });
